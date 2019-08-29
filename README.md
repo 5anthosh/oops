@@ -4,7 +4,7 @@ oops makes errors in go traceable.
 It provies traceback function to get more information when you return error from the function
 
 > The convention says that an error should either be handled (whatever that means) or returned to the caller.
-> But with abtraction, it is difficult to find where the error got originated
+> But with abstraction, it is difficult to find where the error got originated
 > so Traceable function returns error with more information
 
 ## example
