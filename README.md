@@ -1,4 +1,4 @@
-# oops
+# oops 🙊
 
 oops makes errors in Go traceable.
 It provies traceback function to get more information when you return error from the function
