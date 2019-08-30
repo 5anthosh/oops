@@ -19,32 +19,33 @@ import (
 )
 
 func main() {
-	err := f1().(oops.Error)
-	println("FileName ", err.File)
-	println("Line no", err.Line)
-	println("FuncName", err.FuncName)
-	println("Module", err.Module)
+	err := func1().(oops.Error)
+	println(err.Skip(1).Error())
 }
 
-func f1() error {
-	return f2()
+func func1() error {
+	return func2()
 }
 
-func f2() error {
-	return f3()
+func func2() error {
+	return func3()
 }
 
-func f3() error {
-	return oops.T(errors.New("dummy one")) // Line number 26
+func func3() error {
+	return oops.T(errors.New("dummy one")).Info("this is just testing")
 }
+
 ```
 
 ### Run the program
 
 ```sh
 $ go run test.go
-FileName test.go
-Line no 26
-FuncName main.f3
-Module main
+🔴  Error : dummy one
+ℹ️  Info  : this is just testing
+
+ at main.func3 line 23 Desktop/Files/test.go
+ at main.func2 line 19 Desktop/Files/test.go
+ at main.func1 line 15 Desktop/Files/test.go
+ at main.main line 10 Desktop/Files/test.go
 ```
