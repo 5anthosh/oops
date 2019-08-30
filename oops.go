@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+var emptyString = ""
+
 //ErrorTraceFormat prints trace detail in a format
 type ErrorTraceFormat func(funcName string, lineNo int, file string) string
 
@@ -47,6 +49,9 @@ type stack struct {
 
 //JSON converts Error into json format to for structured logging
 func (err *Error) JSON() map[string]interface{} {
+	if err == nil {
+		return nil
+	}
 	json := make(map[string]interface{})
 	json["error"] = err.error
 	json["info"] = err.info
@@ -56,30 +61,46 @@ func (err *Error) JSON() map[string]interface{} {
 
 //TraceFormat registers Errorformat function to print trace in a format
 func (err *Error) TraceFormat(f ErrorTraceFormat) *Error {
+	if err == nil {
+		return nil
+	}
 	err.traceFormat = f
 	return err
 }
 
 //ErrorFormat registers Errorformat function to print error in a format
 func (err *Error) ErrorFormat(f ErrorHeaderFormat) *Error {
+	if err == nil {
+		return nil
+	}
 	err.errorFormat = f
 	return err
 }
+
 func (s stack) format(f string) string {
 	return fmt.Sprintf(f, s.FuncName, s.Line, s.File)
 }
 func (err *Error) Error() string {
+	if err == nil {
+		return emptyString
+	}
 	return err.errorWithSkip(err.skip)
 }
 
 //Info lets you add more information about the error
 func (err *Error) Info(value string) *Error {
+	if err == nil {
+		return nil
+	}
 	err.info = value
 	return err
 }
 
 //Skip skips n functions from bottom of the stack
 func (err *Error) Skip(n int) *Error {
+	if err == nil {
+		return nil
+	}
 	if n > len(err.stackTrace) {
 		n = len(err.stackTrace)
 	}
@@ -89,17 +110,26 @@ func (err *Error) Skip(n int) *Error {
 
 //Line sets line no where error occured
 func (err *Error) Line(value int) *Error {
+	if err == nil {
+		return nil
+	}
 	err.stackTrace[0].Line = value
 	return err
 }
 
 //Func sets function name where error occured
 func (err *Error) Func(value string) *Error {
+	if err == nil {
+		return nil
+	}
 	err.stackTrace[0].FuncName = value
 	return err
 }
 
 func (err *Error) errorWithSkip(skip int) string {
+	if err == nil {
+		return emptyString
+	}
 	if skip > len(err.stackTrace) {
 		skip = len(err.stackTrace)
 	}
@@ -114,6 +144,9 @@ func (err *Error) errorWithSkip(skip int) string {
 
 //Origin prints where error got originated, not the trace
 func (err *Error) Origin() string {
+	if err == nil {
+		return emptyString
+	}
 	return err.errorWithSkip(len(err.stackTrace) - 1)
 }
 
