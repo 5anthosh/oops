@@ -31,14 +31,14 @@ func dErrorFormat(err string, info string) string {
 type Error struct {
 	error
 	info        string
-	stackTrace  []Stack
+	stackTrace  []stack
 	skip        int
 	traceFormat ErrorTraceFormat
 	errorFormat ErrorHeaderFormat
 }
 
-//Stack stores single stack information
-type Stack struct {
+//stack stores single stack information
+type stack struct {
 	File     string `json:"file,omitempty"`
 	Line     int    `json:"line,omitempty"`
 	FuncName string `json:"func_name,omitempty"`
@@ -64,7 +64,7 @@ func (err Error) ErrorFormat(f ErrorHeaderFormat) Error {
 	err.errorFormat = f
 	return err
 }
-func (s Stack) format(f string) string {
+func (s stack) format(f string) string {
 	return fmt.Sprintf(f, s.FuncName, s.Line, s.File)
 }
 func (err Error) Error() string {
@@ -130,13 +130,13 @@ func T(err error) Error {
 	pc := make([]uintptr, 10)
 	runtime.Callers(2, pc)
 	frames := runtime.CallersFrames(pc)
-	var st []Stack
+	var st []stack
 	for {
 		f, more := frames.Next()
 		if !more {
 			break
 		}
-		st = append(st, Stack{
+		st = append(st, stack{
 			File:     formatFileName(f.File),
 			Line:     f.Line,
 			FuncName: f.Function,
