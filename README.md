@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	err := func1().(oops.Error)
+	err := func1().(*oops.Error)
 	println(err.Skip(1).Error())
 }
 
