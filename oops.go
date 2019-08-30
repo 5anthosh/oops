@@ -53,12 +53,17 @@ func (err Error) JSON() map[string]interface{} {
 	return json
 }
 
-//Format registers Errorformat function to print trace in a format
-func (err Error) Format(f ErrorTraceFormat) Error {
+//TraceFormat registers Errorformat function to print trace in a format
+func (err Error) TraceFormat(f ErrorTraceFormat) Error {
 	err.traceFormat = f
 	return err
 }
 
+//ErrorFormat registers Errorformat function to print error in a format
+func (err Error) ErrorFormat(f ErrorHeaderFormat) Error {
+	err.errorFormat = f
+	return err
+}
 func (s Stack) format(f string) string {
 	return fmt.Sprintf(f, s.FuncName, s.Line, s.File)
 }
