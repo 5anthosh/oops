@@ -7,22 +7,34 @@ import (
 	"strings"
 )
 
-//ErrorFormat prints trace detail in a format
-type ErrorFormat func(funcName string, lineNo int, file string) string
+//ErrorTraceFormat prints trace detail in a format
+type ErrorTraceFormat func(funcName string, lineNo int, file string) string
 
-var defaultErrorFormat = "\n at %s line %d %s "
+//ErrorHeaderFormat prints error detail in a format
+type ErrorHeaderFormat func(err string, info string) string
 
-func dErrorFormat(funcName string, lineNo int, file string) string {
-	return fmt.Sprintf(defaultErrorFormat, funcName, lineNo, file)
+var defaultTraceFormat = "\n \t at %s line %d %s "
+var defaultErrorFormat = "🔴  Error : %s \n%s "
+
+func dTraceFormat(funcName string, lineNo int, file string) string {
+	return fmt.Sprintf(defaultTraceFormat, funcName, lineNo, file)
+}
+
+func dErrorFormat(err string, info string) string {
+	if len(info) > 0 {
+		return fmt.Sprintf(defaultErrorFormat, err, "ℹ️  Info  : "+info)
+	}
+	return fmt.Sprintf(defaultErrorFormat, err, "")
 }
 
 //Error is a error with more information
 type Error struct {
 	error
-	info       string
-	stackTrace []Stack
-	skip       int
-	errFormat  ErrorFormat
+	info        string
+	stackTrace  []Stack
+	skip        int
+	traceFormat ErrorTraceFormat
+	errorFormat ErrorHeaderFormat
 }
 
 //Stack stores single stack information
@@ -42,8 +54,8 @@ func (err Error) JSON() map[string]interface{} {
 }
 
 //Format registers Errorformat function to print trace in a format
-func (err Error) Format(f ErrorFormat) Error {
-	err.errFormat = f
+func (err Error) Format(f ErrorTraceFormat) Error {
+	err.traceFormat = f
 	return err
 }
 
@@ -87,17 +99,9 @@ func (err Error) errorWithSkip(skip int) string {
 	}
 	var sb strings.Builder
 	st := err.error.Error()
-	sb.WriteString("🔴  Error : ")
-	sb.WriteString(st)
-	sb.WriteByte('\n')
-
-	if len(err.info) > 0 {
-		sb.WriteString("ℹ️  Info  : ")
-		sb.WriteString(err.info)
-		sb.WriteByte('\n')
-	}
+	sb.WriteString(err.errorFormat(st, err.info))
 	for _, stack := range err.stackTrace[:len(err.stackTrace)-skip] {
-		sb.WriteString(err.errFormat(stack.FuncName, stack.Line, stack.File))
+		sb.WriteString(err.traceFormat(stack.FuncName, stack.Line, stack.File))
 	}
 	return sb.String()
 }
@@ -133,7 +137,7 @@ func T(err error) Error {
 			FuncName: f.Function,
 		})
 	}
-	return Error{error: err, stackTrace: st, errFormat: dErrorFormat}
+	return Error{error: err, stackTrace: st, traceFormat: dTraceFormat, errorFormat: dErrorFormat}
 }
 
 func formatFileName(fileName string) string {
