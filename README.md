@@ -42,7 +42,7 @@ func func3() error {
 ```sh
 $ go run test.go
 🔴  Error : dummy one
-ℹ️  Info   : this is just testing
+ℹ️   Info  : this is just testing
 
  at main.func3 line 23 Desktop/Files/test.go
  at main.func2 line 19 Desktop/Files/test.go
