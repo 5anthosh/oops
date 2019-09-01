@@ -37,7 +37,7 @@ func TestT(t *testing.T) {
 	teststack(testFunc, t, "github.com/5anthosh/oops.TestT", 23, file)
 }
 
-func teststack(s stack, t *testing.T, funcName string, line int, fileName string) {
+func teststack(s Stack, t *testing.T, funcName string, line int, fileName string) {
 	if s.FuncName != funcName {
 		t.Errorf("want %q instead got %q", funcName, s.FuncName)
 	}
