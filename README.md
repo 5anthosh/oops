@@ -1,5 +1,4 @@
-# oops 🙊
-[![GoDoc](https://godoc.org/github.com/5anthosh/oops?status.svg)](https://godoc.org/github.com/5anthosh/oops)
+# oops 🙊 [![GoDoc](https://godoc.org/github.com/5anthosh/oops?status.svg)](https://godoc.org/github.com/5anthosh/oops) [![Go Report Card](https://goreportcard.com/badge/github.com/5anthosh/oops)](https://goreportcard.com/report/github.com/5anthosh/oops)
 
 oops makes errors in Go traceable.
 It provides traceback function to get more information when you return error from the function
