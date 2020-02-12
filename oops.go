@@ -144,7 +144,7 @@ func (err *Error) Origin() string {
 
 //T add error with more information like stacktrace
 //corresponding to the where function got called
-func T(err error) *Error {
+func T(err error) error {
 	if err == nil {
 		return nil
 	}

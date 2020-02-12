@@ -16,7 +16,7 @@ func test2() *Error {
 	return test()
 }
 func test() *Error {
-	return T(errors.New(errorMessage)).Info(infoMessage)
+	return T(errors.New(errorMessage)).(*Error).Info(infoMessage)
 }
 
 func TestT(t *testing.T) {
