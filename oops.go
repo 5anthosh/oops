@@ -11,14 +11,14 @@ import (
 
 var emptyString = ""
 
-//ErrorFormat let us specfiy format for error and stacktrace
+//ErrorFormat let us specify format for error and stacktrace
 type ErrorFormat func(err string, info string, stacktrace []Stack) string
 
-var defaultTraceFormat = "\n \t at %s line %d %s "
+var defaultTraceFormat = "\n \t at %s (%s:%d)"
 var defaultErrorFormat = "🔴  Error : %s \n%s "
 
 func dTraceFormat(funcName string, lineNo int, file string) string {
-	return fmt.Sprintf(defaultTraceFormat, funcName, lineNo, file)
+	return fmt.Sprintf(defaultTraceFormat, funcName, file, lineNo)
 }
 
 func dErrorHeaderFormat(err string, info string) string {
@@ -106,7 +106,7 @@ func (err *Error) Skip(n int) *Error {
 	return err
 }
 
-//Line sets line no where error occured
+//Line sets line no where error occurred
 func (err *Error) Line(value int) *Error {
 	if err == nil {
 		return nil
@@ -115,7 +115,7 @@ func (err *Error) Line(value int) *Error {
 	return err
 }
 
-//Func sets function name where error occured
+//Func sets function name where error occurred
 func (err *Error) Func(value string) *Error {
 	if err == nil {
 		return nil
